@@ -121,6 +121,7 @@ public class Player {
     public void playCard(Player opponent) {
         Move move = strategy.nextMove(mana, health, hand);
         Optional<Card> card = move.getCard();
+        logger.info("PLAYING CARD: " + card + "!");
         if (card.isPresent()) {
             playCard(card.get(), opponent, move.getAction());
         } else {

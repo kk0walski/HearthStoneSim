@@ -30,6 +30,15 @@ public class Card implements Comparable<Card> {
         this.inHand = false;
     }
 
+    public Card(Card card){
+        this.mana = card.getMana();
+        this.maxHealth = card.getMaxHealth();
+        this.health = card.getHealth();
+        this.attack = card.getAttack();
+        this.hasBeenUsed = card.getHasBeenUsed();
+        this.inHand = card.getInHand();
+    }
+
     public Card(int health, int mana, int attack) {
         this.maxHealth = health;
         this.health = health;

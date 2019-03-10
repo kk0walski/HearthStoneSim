@@ -20,21 +20,21 @@ public class ConsoleInputStrategy extends Strategy {
     public Move nextMove(int availableMana, int currentHealth, List<Card> availableCards) {
         try {
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in, Charset.defaultCharset()));
-            Integer card = -1;
+            Integer index = -1;
             Action action = Action.DAMAGE;
-            while (card < 0 || card > 8 || card > availableMana || !availableCards.contains(new Card(card))) {
+            while (index < 0 || index > 5 || availableCards.get(index).getMana() > availableMana) {
                 try {
                     String input = br.readLine();
                     if (input.endsWith("h")) {
                         action = Action.HEALING;
                         input = input.replace("h", "");
                     }
-                    card = Integer.decode(input);
+                    index = Integer.decode(input);
                 } catch (NumberFormatException e) {
                     logger.warning("Invalid input: " + e.getMessage());
                 }
             }
-            return new Move(Optional.of(new Card(card)), action);
+            return new Move(Optional.of(new Card(availableCards.get(index))), action);
         } catch (IOException e) {
             logger.severe("Could not read console input: " + e.getMessage());
             e.printStackTrace();
