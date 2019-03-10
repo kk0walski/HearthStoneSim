@@ -22,7 +22,7 @@ public class ConsoleInputStrategy extends Strategy {
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in, Charset.defaultCharset()));
             Integer index = -1;
             Action action = Action.DAMAGE;
-            while (index < 0 || index > 5 || availableCards.get(index).getMana() > availableMana) {
+            while (index < 0 || index >= availableCards.size() || availableCards.get(index).getMana() > availableMana) {
                 try {
                     String input = br.readLine();
                     if (input.endsWith("h")) {
