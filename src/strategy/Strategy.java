@@ -12,10 +12,10 @@ public abstract class Strategy {
     public abstract Move nextMove(int availableMana, int currentHealth, List<Card> availableCards);
 
     protected Optional<Card> highestCard(int availableMana, List<Card> availableCards) {
-        return availableCards.stream().filter(card -> card.getValue() <= availableMana).max(Comparator.<Card>naturalOrder());
+        return availableCards.stream().filter(card -> card.getMana() <= availableMana).max(Comparator.<Card>naturalOrder());
     }
 
     protected Optional<Card> lowestCard(int availableMana, List<Card> availableCards) {
-        return availableCards.stream().filter(card -> card.getValue() <= availableMana).min(Comparator.<Card>naturalOrder());
+        return availableCards.stream().filter(card -> card.getMana() <= availableMana).min(Comparator.<Card>naturalOrder());
     }
 }

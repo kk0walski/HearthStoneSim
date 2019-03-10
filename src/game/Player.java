@@ -55,7 +55,7 @@ public class Player {
     }
 
     public int getNumberOfDeckCardsWithManaCost(int manaCost) {
-        return (int) deck.stream().filter(card -> card.getValue() == manaCost).count();
+        return (int) deck.stream().filter(card -> card.getMana() == manaCost).count();
     }
 
     public int getNumberOfDeckCards() {
@@ -63,7 +63,7 @@ public class Player {
     }
 
     public Integer getNumberOfHandCardsWithManaCost(int manaCost) {
-        return (int) hand.stream().filter(card -> card.getValue() == manaCost).count();
+        return (int) hand.stream().filter(card -> card.getMana() == manaCost).count();
     }
 
     public int getNumberOfHandCards() {
@@ -115,7 +115,7 @@ public class Player {
     }
 
     public boolean canPlayCards() {
-        return hand.stream().filter(card -> card.getValue() <= mana).count() > 0;
+        return hand.stream().filter(card -> card.getMana() <= mana).count() > 0;
     }
 
     public void playCard(Player opponent) {
@@ -129,18 +129,18 @@ public class Player {
     }
 
     void playCard(Card card, Player opponent, Action action) {
-        if (mana < card.getValue()) {
+        if (mana < card.getMana()) {
             throw new IllegalMoveException("Insufficient Mana (" + mana + ") to pay for card " + card + ".");
         }
         logger.info(this + " plays card " + card + " for " + action);
-        mana -= card.getValue();
+        mana -= card.getMana();
         hand.remove(card);
         switch (action) {
             case DAMAGE:
-                opponent.receiveDamage(card.getValue());
+                opponent.receiveDamage(card.getMana());
                 break;
             case HEALING:
-                this.heal(card.getValue());
+                this.heal(card.getMana());
                 break;
             default:
                 throw new IllegalMoveException("Unrecognized game action: " + action);

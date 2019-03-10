@@ -44,7 +44,7 @@ public class AiStrategy extends Strategy {
         List<Card> bestCombo = new ArrayList<>();
         int maxDamage = 0;
         for (List<Card> combo : cardCombos) {
-            int comboDamage = combo.stream().mapToInt(Card::getValue).sum();
+            int comboDamage = combo.stream().mapToInt(Card::getMana).sum();
             if (comboDamage > maxDamage || (comboDamage == maxDamage && combo.size() > bestCombo.size())) {
                 maxDamage = comboDamage;
                 bestCombo = combo;
@@ -57,10 +57,10 @@ public class AiStrategy extends Strategy {
     private void collectMaxDamageCardCombo(List<Card> selectedCards, int availableMana, List<Card> availableCards) {
         for (Card card : availableCards) {
             List<Card> remainingCards = new ArrayList<>(availableCards);
-            if (selectedCards.stream().mapToInt(Card::getValue).sum() + card.getValue() <= availableMana) {
+            if (selectedCards.stream().mapToInt(Card::getMana).sum() + card.getMana() <= availableMana) {
                 selectedCards.add(card);
                 remainingCards.remove(card);
-                collectMaxDamageCardCombo(selectedCards, availableMana - card.getValue(), remainingCards);
+                collectMaxDamageCardCombo(selectedCards, availableMana - card.getMana(), remainingCards);
             }
         }
     }
