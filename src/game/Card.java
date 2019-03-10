@@ -1,9 +1,8 @@
 package game;
 
+import java.util.Random;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toCollection;
 
@@ -17,9 +16,19 @@ public class Card implements Comparable<Card> {
     private boolean inHand;
 
 
-    /*public static List<Card> list(Integer... values) {
+    public static List<Card> list(Integer... values) {
         return stream(values).map(Card::new).collect(toCollection(ArrayList::new));
-    }*/
+    }
+
+    public Card(int mana){
+        Random generator = new Random();
+        this.mana = mana;
+        this.maxHealth = generator.nextInt(10) + 1;
+        this.health = maxHealth;
+        this.attack = generator.nextInt(10) + 1;
+        this.hasBeenUsed = false;
+        this.inHand = false;
+    }
 
     public Card(int health, int mana, int attack) {
         this.maxHealth = health;
@@ -33,6 +42,26 @@ public class Card implements Comparable<Card> {
     public int getHealth() {
         return health;
     }
+
+    public void setHealth(int newHealth) { this.health = newHealth; }
+
+    public int getMaxHealth() { return maxHealth; }
+
+    public int getAttack() { return attack; }
+
+    public int getMana() { return mana; }
+
+    public boolean getInHand() { return inHand; }
+
+    public void isInHand() { inHand = true; }
+
+    public void notInHand() { inHand = false; }
+
+    public boolean getHasBeenUsed() { return hasBeenUsed; }
+
+    public void wasUsed() { hasBeenUsed = true; }
+
+    public void notUsed() { hasBeenUsed = false; }
 
     @Override
     public String toString() {
