@@ -104,6 +104,10 @@ public class Card implements Comparable<Card> {
         return reasult;
     }
 
+    public void damage(int attack){
+        this.health -= attack;
+    }
+
     @Override
     public int compareTo(Card other) {
         return mana != other.mana ? mana - other.mana : attack != other.attack ? attack - other.attack : health - other.health;

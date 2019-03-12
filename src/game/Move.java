@@ -6,16 +6,16 @@ public class Move {
 
     private final Optional<Card> card;
     private final Action action;
-    private final int enemyCard;
+    private final Optional<Card> enemyCard;
 
-    public Move(Optional<Card> card, Action action, int enemyCard) {
+    public Move(Optional<Card> card, Action action, Optional<Card> enemyCard) {
         this.card = card;
         this.action = action;
         this.enemyCard = enemyCard;
     }
 
     public Move(Optional<Card> card, Action action) {
-        this(card, action, -1);
+        this(card, action, Optional.empty());
     }
 
     @Override
@@ -34,6 +34,7 @@ public class Move {
     @Override
     public int hashCode() {
         int result = card != null ? card.hashCode() : 0;
+        result = 31 * result + (enemyCard != null ? card.hashCode() : 0);
         result = 31 * result + (action != null ? action.hashCode() : 0);
         return result;
     }
@@ -41,6 +42,8 @@ public class Move {
     public Optional<Card> getCard() {
         return card;
     }
+
+    public Optional<Card> getEnemyCard() { return enemyCard; }
 
     @Override
     public String toString() {

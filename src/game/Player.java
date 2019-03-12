@@ -59,6 +59,8 @@ public class Player {
         return mana;
     }
 
+    public String getDeck() { return deck.toString(); }
+
     public int getNumberOfDeckCardsWithManaCost(int manaCost) {
         return (int) deck.stream().filter(card -> card.getMana() == manaCost).count();
     }
@@ -125,7 +127,28 @@ public class Player {
 
     public void playCard(Player opponent) {
         Move move = strategy.nextMove(mana, health, hand);
+        Action action = move.getAction();
         Optional<Card> card = move.getCard();
+        switch (action){
+            case ATTACK_CARD:
+                Optional<Card> enemyCard = move.getEnemyCard();
+                if(card.isPresent() && enemyCard.isPresent()){
+                    playCard(card.get(), opponent, enemyCard.get(), move.getAction());
+                }else{
+                    throw new IllegalMoveException("No card can be played from hand " + hand
+                            + " with (" + mana + ") mana or no card in player" + deck + " or in enemy deck " + opponent.getDeck() + " .");
+                }
+                break;
+            case PLAY_CARD:
+                if(card.isPresent()){
+                    playCard(card.get(), opponent, move.getAction());
+                }
+            case ATTACK_HERO:
+                if(card.isPresent()){
+                    playCard(card.get(), opponent, move.getAction());
+                }
+        }
+
         logger.info("PLAYING CARD: " + card + "!");
         if (card.isPresent()) {
             playCard(card.get(), opponent, move.getAction());
@@ -134,22 +157,38 @@ public class Player {
         }
     }
 
+    void destroyCard(Card card){
+        deck.remove(card);
+    }
+
     void playCard(Card card, Player opponent, Action action) {
-        if (mana < card.getMana()) {
-            throw new IllegalMoveException("Insufficient Mana (" + mana + ") to pay for card " + card + ".");
-        }
-        logger.info(this + " plays card " + card + " for " + action);
-        mana -= card.getMana();
-        hand.remove(card);
         switch (action) {
-            case DAMAGE:
-                opponent.receiveDamage(card.getMana());
+            case PLAY_CARD:
+                if (mana < card.getMana()) {
+                    throw new IllegalMoveException("Insufficient Mana (" + mana + ") to pay for card " + card + ".");
+                }
+                logger.info(this + " plays card " + card + " for " + action);
+                mana -= card.getMana();
+                deck.add(card);
+                hand.remove(card);
                 break;
-            case HEALING:
-                this.heal(card.getMana());
+            case ATTACK_HERO:
+                logger.info(this + " plays card " + card + " for " + action);
+                opponent.receiveDamage(card.getAttack());
                 break;
             default:
                 throw new IllegalMoveException("Unrecognized game action: " + action);
+        }
+    }
+
+    void playCard(Card card, Player opnonent, Card opnentCard, Action action){
+        card.damage(opnentCard.getAttack());
+        opnentCard.damage(card.getAttack());
+        if(card.getHealth() <= 0){
+            this.destroyCard(card);
+        }
+        if(opnentCard.getHealth() <= 0){
+            opnonent.destroyCard(opnentCard);
         }
     }
 
