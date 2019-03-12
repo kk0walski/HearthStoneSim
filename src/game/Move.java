@@ -6,10 +6,16 @@ public class Move {
 
     private final Optional<Card> card;
     private final Action action;
+    private final int enemyCard;
 
-    public Move(Optional<Card> card, Action action) {
+    public Move(Optional<Card> card, Action action, int enemyCard) {
         this.card = card;
         this.action = action;
+        this.enemyCard = enemyCard;
+    }
+
+    public Move(Optional<Card> card, Action action) {
+        this(card, action, -1);
     }
 
     @Override
@@ -41,6 +47,7 @@ public class Move {
         return "Move{" +
                 "card=" + card +
                 ", action=" + action +
+                ", enemy card index=" + enemyCard +
                 '}';
     }
 

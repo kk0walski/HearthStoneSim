@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 import game.Card;
 import game.Move;
@@ -20,6 +21,9 @@ import game.Action;
  * This strategy switches into healing with the highest possible cards when the players health falls below 10.
  */
 public class AiStrategy extends Strategy {
+
+
+    private static final Logger logger = Logger.getLogger("AI");
 
     @Override
     public Move nextMove(int availableMana, int currentHealth, List<Card> availableCards) {

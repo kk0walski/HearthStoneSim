@@ -1,5 +1,5 @@
 package game;
 
 public enum Action {
-    DAMAGE, HEALING
+    PLAY_CARD, ATTACK_CARD, ATTACK_HERO
 }

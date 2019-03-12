@@ -15,6 +15,9 @@ public class Card implements Comparable<Card> {
     private boolean hasBeenUsed;
     private boolean inHand;
 
+    private final int maximumAttack = 10;
+    private final int maximumHealth = 20;
+
 
     public static List<Card> list(Integer... values) {
         return stream(values).map(Card::new).collect(toCollection(ArrayList::new));
@@ -23,9 +26,9 @@ public class Card implements Comparable<Card> {
     public Card(int mana){
         Random generator = new Random();
         this.mana = mana;
-        this.maxHealth = generator.nextInt(10) + 1;
+        this.maxHealth = generator.nextInt(maximumHealth) + 1;
         this.health = maxHealth;
-        this.attack = generator.nextInt(10) + 1;
+        this.attack = generator.nextInt(maximumAttack) + 1;
         this.hasBeenUsed = false;
         this.inHand = false;
     }
