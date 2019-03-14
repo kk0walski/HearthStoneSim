@@ -7,6 +7,7 @@ import java.util.Random;
 import java.util.logging.Logger;
 
 import exception.IllegalMoveException;
+import gameconfig.GameConfig;
 import strategy.Strategy;
 
 public class Player {
@@ -28,7 +29,6 @@ public class Player {
 
     private List<Card> deck = new ArrayList<>();
     private List<Card> hand = new ArrayList<>();
-    private List<Card> avaliableCards = new ArrayList<>();
 
     private final Strategy strategy;
     private final String name;
@@ -36,18 +36,16 @@ public class Player {
     public Player(String name, Strategy strategy) {
         this.name = name;
         this.strategy = strategy;
-        for(int i = 0; i < 20; i++){
-            avaliableCards.add(new Card(random.nextInt(MAX_MANA_COST)));
-        }
+        this.deck = DeckGenerator.getDeck(GameConfig.CARDS_IN_DECK);
     }
 
-    Player(String name, Strategy strategy, int health, int manaSlots, int mana, List<Card> avCards, List<Card> hand) {
+    public Player(String name, Strategy strategy, int health,
+                  int manaSlots, int mana, List<Card> hand) {
         this.name = name;
         this.strategy = strategy;
         this.health = health;
         this.manaSlots = manaSlots;
         this.mana = mana;
-        this.avaliableCards = avCards;
         this.hand = hand;
     }
 
@@ -181,14 +179,14 @@ public class Player {
         }
     }
 
-    void playCard(Card card, Player opnonent, Card opnentCard, Action action){
-        card.damage(opnentCard.getAttack());
-        opnentCard.damage(card.getAttack());
+    void playCard(Card card, Player opponent, Card opponentCard, Action action){
+        card.damage(opponentCard.getAttack());
+        opponentCard.damage(card.getAttack());
         if(card.getHealth() <= 0){
             this.destroyCard(card);
         }
-        if(opnentCard.getHealth() <= 0){
-            opnonent.destroyCard(opnentCard);
+        if(opponentCard.getHealth() <= 0){
+            opponent.destroyCard(opponentCard);
         }
     }
 

@@ -3,6 +3,7 @@ package game;
 import java.util.Random;
 import java.util.ArrayList;
 import java.util.List;
+
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toCollection;
 
@@ -12,34 +13,12 @@ public class Card implements Comparable<Card> {
     private int health;
     private final int mana;
     private final int attack;
-    private boolean hasBeenUsed;
-    private boolean inHand;
 
-    private final int maximumAttack = 10;
-    private final int maximumHealth = 20;
-
-
-    public static List<Card> list(Integer... values) {
-        return stream(values).map(Card::new).collect(toCollection(ArrayList::new));
-    }
-
-    public Card(int mana){
-        Random generator = new Random();
-        this.mana = mana;
-        this.maxHealth = generator.nextInt(maximumHealth) + 1;
-        this.health = maxHealth;
-        this.attack = generator.nextInt(maximumAttack) + 1;
-        this.hasBeenUsed = false;
-        this.inHand = false;
-    }
-
-    public Card(Card card){
+    public Card(Card card) {
         this.mana = card.getMana();
         this.maxHealth = card.getMaxHealth();
         this.health = card.getHealth();
         this.attack = card.getAttack();
-        this.hasBeenUsed = card.getHasBeenUsed();
-        this.inHand = card.getInHand();
     }
 
     public Card(int health, int mana, int attack) {
@@ -47,33 +26,35 @@ public class Card implements Comparable<Card> {
         this.health = health;
         this.mana = mana;
         this.attack = attack;
-        this.hasBeenUsed = false;
-        this.inHand = false;
     }
 
     public int getHealth() {
         return health;
     }
 
-    public void setHealth(int newHealth) { this.health = newHealth; }
+    public void setHealth(int newHealth) {
+        this.health = newHealth;
+    }
 
-    public int getMaxHealth() { return maxHealth; }
+    public int getMaxHealth() {
+        return maxHealth;
+    }
 
-    public int getAttack() { return attack; }
+    public int getAttack() {
+        return attack;
+    }
 
-    public int getMana() { return mana; }
+    public int getMana() {
+        return mana;
+    }
 
-    public boolean getInHand() { return inHand; }
+    public void damage(int attack) {
+        this.health -= attack;
+    }
 
-    public void isInHand() { inHand = true; }
-
-    public void notInHand() { inHand = false; }
-
-    public boolean getHasBeenUsed() { return hasBeenUsed; }
-
-    public void wasUsed() { hasBeenUsed = true; }
-
-    public void notUsed() { hasBeenUsed = false; }
+    public boolean isDead() {
+        return health <= 0;
+    }
 
     @Override
     public String toString() {
@@ -88,8 +69,7 @@ public class Card implements Comparable<Card> {
         Card card = (Card) o;
 
         return maxHealth == card.maxHealth &&
-                attack == card.attack && mana == card.mana
-                && hasBeenUsed == card.hasBeenUsed && inHand == card.inHand;
+                attack == card.attack && mana == card.mana;
     }
 
     @Override
@@ -99,13 +79,7 @@ public class Card implements Comparable<Card> {
         reasult = 31 * reasult + mana;
         reasult = 31 * reasult + health;
         reasult = 31 * reasult + attack;
-        reasult = 31 * reasult + (hasBeenUsed ? 1 : 0);
-        reasult = 31 * reasult + (inHand ? 1 : 0);
         return reasult;
-    }
-
-    public void damage(int attack){
-        this.health -= attack;
     }
 
     @Override
