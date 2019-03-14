@@ -24,29 +24,52 @@ public class Player {
 
     private int health = MAXIMUM_HEALTH;
 
-    private int manaSlots = 0;
     private int mana = 0;
+    private boolean isOponent = false;
+    private boolean isPlayerTurn = false;
 
     private List<Card> deck = new ArrayList<>();
     private List<Card> hand = new ArrayList<>();
+    private List<Card> pack = new ArrayList<>();
 
     private final Strategy strategy;
     private final String name;
 
-    public Player(String name, Strategy strategy) {
+    public Player(String name, Strategy strategy, boolean isOponent) {
         this.name = name;
         this.strategy = strategy;
-        this.deck = DeckGenerator.getDeck(GameConfig.CARDS_IN_DECK);
+        this.health = MAXIMUM_HEALTH;
+        this.mana = MAXIMUM_MANA_SLOTS;
+        this.isOponent = isOponent;
+        this.pack = DeckGenerator.getDeck(GameConfig.CARDS_IN_PACK);
+        if(isOponent){
+            for(int i = 0; i < STARTING_HAND_SIZE+1; i++){
+                this.drawCard();
+            }
+        }else{
+            for(int i = 0; i < STARTING_HAND_SIZE; i++){
+                this.drawCard();
+            }
+        }
     }
 
     public Player(String name, Strategy strategy, int health,
-                  int manaSlots, int mana, List<Card> hand) {
+                  int mana, List<Card> pack, boolean isOponent) {
         this.name = name;
         this.strategy = strategy;
         this.health = health;
-        this.manaSlots = manaSlots;
         this.mana = mana;
-        this.hand = hand;
+        this.pack = pack;
+        this.isOponent = isOponent;
+        if(isOponent){
+            for(int i = 0; i < STARTING_HAND_SIZE+1; i++){
+                this.drawCard();
+            }
+        }else{
+            for(int i = 0; i < STARTING_HAND_SIZE; i++){
+                this.drawCard();
+            }
+        }
     }
 
     public int getHealth() {
@@ -67,6 +90,10 @@ public class Player {
         return deck.size();
     }
 
+    public int getNumberOfPackCards() {
+        return pack.size();
+    }
+
     public Integer getNumberOfHandCardsWithManaCost(int manaCost) {
         return (int) hand.stream().filter(card -> card.getMana() == manaCost).count();
     }
@@ -76,12 +103,12 @@ public class Player {
     }
 
     public void drawCard() {
-        if (getNumberOfDeckCards() == 0) {
+        if (getNumberOfPackCards() == 0) {
             logger.info(this + " bleeds out!");
             health--;
         } else {
-            Card card = deck.get(random.nextInt(deck.size()));
-            deck.remove(card);
+            Card card = pack.get(random.nextInt(deck.size()));
+            pack.remove(card);
             logger.info(this + " draws card: " + card);
             if (getNumberOfHandCards() < MAXIMUM_HAND_SIZE) {
                 hand.add(card);
@@ -91,18 +118,8 @@ public class Player {
         }
     }
 
-    public int getManaSlots() {
-        return manaSlots;
-    }
-
-    public void giveManaSlot() {
-        if (manaSlots < MAXIMUM_MANA_SLOTS) {
-            manaSlots++;
-        }
-    }
-
     public void refillMana() {
-        mana = manaSlots;
+        this.mana = MAXIMUM_MANA_SLOTS;
     }
 
     public void drawStartingHand() {
@@ -111,56 +128,20 @@ public class Player {
         }
     }
 
-    private void heal(int amount) {
-        health = Math.min(health + amount, MAXIMUM_HEALTH);
-    }
-
     private void receiveDamage(int damage) {
-        health -= damage;
+        this.health -= damage;
     }
 
     public boolean canPlayCards() {
         return hand.stream().filter(card -> card.getMana() <= mana).count() > 0;
     }
 
-    public void playCard(Player opponent) {
-        Move move = strategy.nextMove(mana, health, hand);
-        Action action = move.getAction();
-        Optional<Card> card = move.getCard();
-        switch (action){
-            case ATTACK_CARD:
-                Optional<Card> enemyCard = move.getEnemyCard();
-                if(card.isPresent() && enemyCard.isPresent()){
-                    playCard(card.get(), opponent, enemyCard.get(), move.getAction());
-                }else{
-                    throw new IllegalMoveException("No card can be played from hand " + hand
-                            + " with (" + mana + ") mana or no card in player" + deck + " or in enemy deck " + opponent.getDeck() + " .");
-                }
-                break;
-            case PLAY_CARD:
-                if(card.isPresent()){
-                    playCard(card.get(), opponent, move.getAction());
-                }
-            case ATTACK_HERO:
-                if(card.isPresent()){
-                    playCard(card.get(), opponent, move.getAction());
-                }
-        }
-
-        logger.info("PLAYING CARD: " + card + "!");
-        if (card.isPresent()) {
-            playCard(card.get(), opponent, move.getAction());
-        } else {
-            throw new IllegalMoveException("No card can be played from hand " + hand + " with (" + mana + ") mana.");
-        }
-    }
-
-    void destroyCard(Card card){
+    public void destroyCard(Card card){
         deck.remove(card);
     }
 
-    void playCard(Card card, Player opponent, Action action) {
-        switch (action) {
+    public void playCard(Card card, Player opponent, Action action){
+        switch(action){
             case PLAY_CARD:
                 if (mana < card.getMana()) {
                     throw new IllegalMoveException("Insufficient Mana (" + mana + ") to pay for card " + card + ".");
@@ -179,7 +160,7 @@ public class Player {
         }
     }
 
-    void playCard(Card card, Player opponent, Card opponentCard, Action action){
+    public void playCard(Card card, Player opponent, Card opponentCard, Action action){
         card.damage(opponentCard.getAttack());
         opponentCard.damage(card.getAttack());
         if(card.getHealth() <= 0){
@@ -190,14 +171,21 @@ public class Player {
         }
     }
 
+    public void endTour(){
+        this.isPlayerTurn = false;
+    }
+
+    public void beginTour(){
+        this.isPlayerTurn = true;
+    }
+
     @Override
     public String toString() {
         return "Player:" + name + "{" +
                 "health=" + health +
-                ", mana=" + mana + "/" + manaSlots +
+                ", mana=" + mana +
                 ", hand=" + hand +
                 ", deck=" + deck +
                 '}';
     }
-
 }
