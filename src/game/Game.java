@@ -1,25 +1,17 @@
-
+package game;
 
 import java.util.Random;
 import java.util.logging.Logger;
 
-import strategy.AiStrategy;
-import strategy.ConsoleInputStrategy;
-import game.Player;
-
 public class Game {
 
     private static final Logger logger = Logger.getLogger(Game.class.getName());
-
     private Player activePlayer;
+
     private Player opponentPlayer;
 
     public Game(Player player1, Player player2) {
-        this(player1, player2, new StartingPlayerChooser());
-    }
-
-    Game(Player player1, Player player2, StartingPlayerChooser startingPlayerChooser) {
-        activePlayer = startingPlayerChooser.chooseBetween(player1, player2);
+        activePlayer = StartingPlayerChooser.chooseBetween(player1, player2);
         if (activePlayer == player1) {
             opponentPlayer = player2;
         } else {
@@ -31,9 +23,10 @@ public class Game {
     }
 
     public void beginTurn() {
-        activePlayer.giveManaSlot();
-        activePlayer.refillMana();
+        activePlayer.addManaSlot();
+        activePlayer.fillMana();
         activePlayer.drawCard();
+        activePlayer.allowAttackForLiveMonsters();
         logger.info(activePlayer + " plays turn...");
     }
 
@@ -62,8 +55,8 @@ public class Game {
         while (true) {
             if (getWinner() == null) {
                 beginTurn();
-                while (activePlayer.canPlayCards()) {
-                    activePlayer.playCard(opponentPlayer);
+                while (activePlayer.canMakeMove()) {
+                    activePlayer.makeMove(opponentPlayer);
                 }
                 endTurn();
             } else {
@@ -73,23 +66,11 @@ public class Game {
         }
     }
 
-    public Player getActivePlayer() {
-        return activePlayer;
-    }
-
-    public Player getOpponentPlayer() {
-        return opponentPlayer;
-    }
-
-    public static void main(String... args) {
-        new Game(new Player("Human", new ConsoleInputStrategy()), new Player("CPU", new AiStrategy())).run();
-    }
-
     static class StartingPlayerChooser {
 
-        private Random random = new Random();
+        private static Random random = new Random();
 
-        public Player chooseBetween(Player player1, Player player2) {
+        public static Player chooseBetween(Player player1, Player player2) {
             return random.nextBoolean() ? player1 : player2;
         }
 

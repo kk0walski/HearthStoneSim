@@ -2,7 +2,6 @@ package game;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Random;
 import java.util.logging.Logger;
 
@@ -20,53 +19,59 @@ public class Player {
     private static final int MAXIMUM_HAND_SIZE = 5;
     private static final int MAXIMUM_HEALTH = 20;
     private static final int MAXIMUM_MANA_SLOTS = 10;
-    private static final int MAX_MANA_COST = 9;
 
     private int health = MAXIMUM_HEALTH;
 
-    private int mana = 0;
+    private int currentMana = 0;
+    private int currentManaSlots = 0;
     private boolean isOponent = false;
-    private boolean isPlayerTurn = false;
 
-    private List<Card> deck = new ArrayList<>();
+    /**
+     * cards in players hand
+     */
     private List<Card> hand = new ArrayList<>();
-    private List<Card> pack = new ArrayList<>();
+    /**
+     * all, not draw yet players cards
+     */
+    private List<Card> deck;
+    /**
+     * living played cards
+     */
+    private List<Card> activeMonsters = new ArrayList<>();
 
     private final Strategy strategy;
     private final String name;
 
-    public Player(String name, Strategy strategy, boolean isOponent) {
+    public Player(String name, Strategy strategy, boolean isOpponent) {
         this.name = name;
         this.strategy = strategy;
         this.health = MAXIMUM_HEALTH;
-        this.mana = MAXIMUM_MANA_SLOTS;
-        this.isOponent = isOponent;
-        this.pack = DeckGenerator.getDeck(GameConfig.CARDS_IN_PACK);
-        if(isOponent){
-            for(int i = 0; i < STARTING_HAND_SIZE+1; i++){
+        this.isOponent = isOpponent;
+        this.deck = DeckGenerator.getDeck(GameConfig.CARDS_IN_PACK);
+        if (isOpponent) {
+            for (int i = 0; i < STARTING_HAND_SIZE + 1; i++) {
                 this.drawCard();
             }
-        }else{
-            for(int i = 0; i < STARTING_HAND_SIZE; i++){
+        } else {
+            for (int i = 0; i < STARTING_HAND_SIZE; i++) {
                 this.drawCard();
             }
         }
     }
 
     public Player(String name, Strategy strategy, int health,
-                  int mana, List<Card> pack, boolean isOponent) {
+                  int mana, List<Card> deck, boolean isOponent) {
         this.name = name;
         this.strategy = strategy;
         this.health = health;
-        this.mana = mana;
-        this.pack = pack;
+        this.deck = deck;
         this.isOponent = isOponent;
-        if(isOponent){
-            for(int i = 0; i < STARTING_HAND_SIZE+1; i++){
+        if (isOponent) {
+            for (int i = 0; i < STARTING_HAND_SIZE + 1; i++) {
                 this.drawCard();
             }
-        }else{
-            for(int i = 0; i < STARTING_HAND_SIZE; i++){
+        } else {
+            for (int i = 0; i < STARTING_HAND_SIZE; i++) {
                 this.drawCard();
             }
         }
@@ -77,10 +82,12 @@ public class Player {
     }
 
     public int getMana() {
-        return mana;
+        return currentMana;
     }
 
-    public String getDeck() { return deck.toString(); }
+    public String getDeck() {
+        return deck.toString();
+    }
 
     public int getNumberOfDeckCardsWithManaCost(int manaCost) {
         return (int) deck.stream().filter(card -> card.getMana() == manaCost).count();
@@ -91,15 +98,19 @@ public class Player {
     }
 
     public int getNumberOfPackCards() {
-        return pack.size();
-    }
-
-    public Integer getNumberOfHandCardsWithManaCost(int manaCost) {
-        return (int) hand.stream().filter(card -> card.getMana() == manaCost).count();
+        return deck.size();
     }
 
     public int getNumberOfHandCards() {
         return hand.size();
+    }
+
+    public List<Card> getHand() {
+        return hand;
+    }
+
+    public List<Card> getActiveMonsters() {
+        return activeMonsters;
     }
 
     public void drawCard() {
@@ -107,19 +118,26 @@ public class Player {
             logger.info(this + " bleeds out!");
             health--;
         } else {
-            Card card = pack.get(random.nextInt(deck.size()));
-            pack.remove(card);
+            Card card = deck.get(random.nextInt(deck.size()));
+            deck.remove(card);
             logger.info(this + " draws card: " + card);
             if (getNumberOfHandCards() < MAXIMUM_HAND_SIZE) {
                 hand.add(card);
             } else {
+                destroyCard(card);
                 logger.info(this + " drops card " + card + " from overload!");
             }
         }
     }
 
-    public void refillMana() {
-        this.mana = MAXIMUM_MANA_SLOTS;
+    public void addManaSlot() {
+        if (currentManaSlots < MAXIMUM_MANA_SLOTS) {
+            ++currentManaSlots;
+        }
+    }
+
+    public void fillMana() {
+        currentMana = currentManaSlots;
     }
 
     public void drawStartingHand() {
@@ -133,57 +151,78 @@ public class Player {
     }
 
     public boolean canPlayCards() {
-        return hand.stream().filter(card -> card.getMana() <= mana).count() > 0;
+        return hand.stream().anyMatch(card -> card.getMana() <= currentMana);
     }
 
-    public void destroyCard(Card card){
+    public boolean canAnyMonsterAttack() {
+        return activeMonsters.stream().anyMatch(card -> card.canAttack);
+    }
+
+    public void destroyCard(Card card) {
         deck.remove(card);
     }
 
-    public void playCard(Card card, Player opponent, Action action){
-        switch(action){
+    public void destroyMonster(Card card) {
+        activeMonsters.remove(card);
+    }
+
+    public boolean canMakeMove() {
+        return canPlayCards() || canAnyMonsterAttack();
+    }
+
+    public void makeMove(Player opponent) {
+        // strategy will choose move and make call to makeAction
+        strategy.nextMove(this, opponent);
+    }
+
+    public void allowAttackForLiveMonsters() {
+        activeMonsters.forEach(card -> card.canAttack = true);
+    }
+
+    public void makeAction(Card playersCard, Player opponent, Card opponentMonster, Action action) {
+        switch (action) {
             case PLAY_CARD:
-                if (mana < card.getMana()) {
-                    throw new IllegalMoveException("Insufficient Mana (" + mana + ") to pay for card " + card + ".");
+                if (currentMana < playersCard.getMana()) {
+                    throw new IllegalMoveException("Insufficient Mana (" + currentMana + ") to pay for card " + playersCard + ".");
                 }
-                logger.info(this + " plays card " + card + " for " + action);
-                mana -= card.getMana();
-                deck.add(card);
-                hand.remove(card);
+                logger.info(this + " plays card " + playersCard + " for " + action);
+                currentMana -= playersCard.getMana();
+                hand.remove(playersCard);
+                activeMonsters.add(playersCard);
                 break;
             case ATTACK_HERO:
-                logger.info(this + " plays card " + card + " for " + action);
-                opponent.receiveDamage(card.getAttack());
+                logger.info(this + " attacks hero with " + playersCard);
+                opponent.receiveDamage(playersCard.getAttack());
+                playersCard.canAttack = false;
+                break;
+            case ATTACK_MONSTER:
+                logger.info(this + " attacks monster with " + playersCard);
+                if (opponentMonster != null) {
+                    attackOpponentCard(playersCard, opponent, opponentMonster);
+                }
                 break;
             default:
                 throw new IllegalMoveException("Unrecognized game action: " + action);
         }
     }
 
-    public void playCard(Card card, Player opponent, Card opponentCard, Action action){
+    public void attackOpponentCard(Card card, Player opponent, Card opponentCard) {
         card.damage(opponentCard.getAttack());
+        card.canAttack = false;
         opponentCard.damage(card.getAttack());
-        if(card.getHealth() <= 0){
-            this.destroyCard(card);
+        if (card.isDead()) {
+            this.destroyMonster(card);
         }
-        if(opponentCard.getHealth() <= 0){
-            opponent.destroyCard(opponentCard);
+        if (opponentCard.isDead()) {
+            opponent.destroyMonster(opponentCard);
         }
-    }
-
-    public void endTour(){
-        this.isPlayerTurn = false;
-    }
-
-    public void beginTour(){
-        this.isPlayerTurn = true;
     }
 
     @Override
     public String toString() {
         return "Player:" + name + "{" +
                 "health=" + health +
-                ", mana=" + mana +
+                ", mana=" + currentMana +
                 ", hand=" + hand +
                 ", deck=" + deck +
                 '}';

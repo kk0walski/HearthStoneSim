@@ -1,11 +1,6 @@
 package game;
 
-import java.util.Random;
-import java.util.ArrayList;
-import java.util.List;
-
 import static java.util.Arrays.stream;
-import static java.util.stream.Collectors.toCollection;
 
 public class Card implements Comparable<Card> {
 
@@ -13,12 +8,15 @@ public class Card implements Comparable<Card> {
     private int health;
     private final int mana;
     private final int attack;
+    // at the beginning of each turn set this to true IF card is already active
+    public boolean canAttack;
 
     public Card(Card card) {
         this.mana = card.getMana();
         this.maxHealth = card.getMaxHealth();
         this.health = card.getHealth();
         this.attack = card.getAttack();
+        this.canAttack = false;
     }
 
     public Card(int health, int mana, int attack) {
@@ -26,6 +24,7 @@ public class Card implements Comparable<Card> {
         this.health = health;
         this.mana = mana;
         this.attack = attack;
+        this.canAttack = false;
     }
 
     public int getHealth() {
