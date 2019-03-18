@@ -13,7 +13,7 @@ public class Player {
 
     private static final Logger logger = Logger.getLogger("Game");
 
-    Random random = new Random();
+    private Random random = new Random();
 
     private static final int STARTING_HAND_SIZE = 3;
     private static final int MAXIMUM_HAND_SIZE = 5;
@@ -45,9 +45,8 @@ public class Player {
     public Player(String name, Strategy strategy, boolean isOpponent) {
         this.name = name;
         this.strategy = strategy;
-        this.health = MAXIMUM_HEALTH;
         this.isOponent = isOpponent;
-        this.deck = DeckGenerator.getDeck(GameConfig.CARDS_IN_PACK);
+        this.deck = DeckGenerator.getDeck(GameConfig.CARDS_IN_DECK);
         if (isOpponent) {
             for (int i = 0; i < STARTING_HAND_SIZE + 1; i++) {
                 this.drawCard();
@@ -59,14 +58,12 @@ public class Player {
         }
     }
 
-    public Player(String name, Strategy strategy, int health,
-                  int mana, List<Card> deck, boolean isOponent) {
+    public Player(String name, Strategy strategy, List<Card> deck, boolean isOpponent) {
         this.name = name;
         this.strategy = strategy;
-        this.health = health;
         this.deck = deck;
-        this.isOponent = isOponent;
-        if (isOponent) {
+        this.isOponent = isOpponent;
+        if (isOpponent) {
             for (int i = 0; i < STARTING_HAND_SIZE + 1; i++) {
                 this.drawCard();
             }
@@ -93,15 +90,11 @@ public class Player {
         return (int) deck.stream().filter(card -> card.getMana() == manaCost).count();
     }
 
-    public int getNumberOfDeckCards() {
+    private int getNumberOfDeckCards() {
         return deck.size();
     }
 
-    public int getNumberOfPackCards() {
-        return deck.size();
-    }
-
-    public int getNumberOfHandCards() {
+    private int getNumberOfHandCards() {
         return hand.size();
     }
 
@@ -114,7 +107,7 @@ public class Player {
     }
 
     public void drawCard() {
-        if (getNumberOfPackCards() == 0) {
+        if (getNumberOfDeckCards() == 0) {
             logger.info(this + " bleeds out!");
             health--;
         } else {
@@ -158,11 +151,11 @@ public class Player {
         return activeMonsters.stream().anyMatch(card -> card.canAttack);
     }
 
-    public void destroyCard(Card card) {
+    private void destroyCard(Card card) {
         deck.remove(card);
     }
 
-    public void destroyMonster(Card card) {
+    private void destroyMonster(Card card) {
         activeMonsters.remove(card);
     }
 
@@ -192,21 +185,27 @@ public class Player {
                 break;
             case ATTACK_HERO:
                 logger.info(this + " attacks hero with " + playersCard);
+                if (playersCard == null || opponent == null) {
+                    logger.info("Error, passing null for required values");
+                    return;
+                }
                 opponent.receiveDamage(playersCard.getAttack());
                 playersCard.canAttack = false;
                 break;
             case ATTACK_MONSTER:
                 logger.info(this + " attacks monster with " + playersCard);
-                if (opponentMonster != null) {
-                    attackOpponentCard(playersCard, opponent, opponentMonster);
+                if (opponent == null || playersCard == null || opponentMonster == null) {
+                    logger.info("Error, passing null for required values");
+                    return;
                 }
+                attackOpponentCard(playersCard, opponent, opponentMonster);
                 break;
             default:
                 throw new IllegalMoveException("Unrecognized game action: " + action);
         }
     }
 
-    public void attackOpponentCard(Card card, Player opponent, Card opponentCard) {
+    private void attackOpponentCard(Card card, Player opponent, Card opponentCard) {
         card.damage(opponentCard.getAttack());
         card.canAttack = false;
         opponentCard.damage(card.getAttack());
