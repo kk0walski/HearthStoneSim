@@ -51,6 +51,10 @@ public class Game {
         }
     }
 
+    public Player getActivePlayer() {
+        return activePlayer;
+    }
+
     public void run() {
         while (true) {
             if (getWinner() == null) {
