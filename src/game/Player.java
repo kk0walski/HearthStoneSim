@@ -74,6 +74,10 @@ public class Player {
         }
     }
 
+    public String getName() {
+        return strategy.getName();
+    }
+
     public int getHealth() {
         return health;
     }

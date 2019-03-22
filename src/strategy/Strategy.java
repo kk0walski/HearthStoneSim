@@ -23,4 +23,8 @@ public abstract class Strategy {
                 .filter(card -> card.getMana() <= availableMana)
                 .min(Comparator.comparingInt(Card::getMana));
     }
+
+    public String getName() {
+        return Strategy.class.getName();
+    }
 }
