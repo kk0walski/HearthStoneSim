@@ -18,9 +18,9 @@ public class Game {
             secondPlayer = player2;
             opponentPlayer = player2;
         } else {
-            firstPlayer = player2
+            firstPlayer = player2;
             opponentPlayer = player1;
-            secondPlayer = player1
+            secondPlayer = player1;
         }
         activePlayer.drawStartingHand();
         opponentPlayer.drawStartingHand();

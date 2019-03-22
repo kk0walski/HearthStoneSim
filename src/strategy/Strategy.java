@@ -24,6 +24,8 @@ public abstract class Strategy {
                 .min(Comparator.comparingInt(Card::getMana));
     }
 
+    protected Move
+
     public String getName() {
         return Strategy.class.getName();
     }

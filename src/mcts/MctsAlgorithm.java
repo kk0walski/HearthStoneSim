@@ -1,4 +1,4 @@
-package strategy;
+package mcts;
 
 import game.Card;
 import game.Game;
