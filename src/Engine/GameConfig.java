@@ -1,4 +1,4 @@
-package gameconfig;
+package Engine;
 
 public class GameConfig {
     public static final int CARD_MAX_ATTACK = 12;

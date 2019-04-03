@@ -1,34 +1,43 @@
-package mcts;
+package MCTS;
+
+import Engine.Game;
+import Moves.Move;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 
-import game.Game;
-import game.Move;
-
 public class Node {
 
-    private Deque<Move> untriedMoves;
     private Game game;
-    private Move moveInNode;
+    /**
+     * Stack of moves of untried moves.
+     */
+    private Deque<Move> untriedMoves;
     private Node parent;
-    private List<Node> children;
+    private List<Node> childs;
+    private Move moveInNode;
     private int firstHeroWins;
     private int secondHeroWins;
     private int totalGames;
 
     public Node() {
-        children = new ArrayList<>();
+        childs = new ArrayList<>();
     }
 
     public Node(Game game) {
         this();
         this.game = game;
-        untriedMoves = new ArrayDeque<Move>();
+        untriedMoves = new ArrayDeque<Move>(game.getActiveHero().getAvailableMoves());
     }
 
+    /**
+     * Child node constructor.
+     *
+     * @param parent
+     * @param moveInNode
+     */
     public Node(Node parent, Move moveInNode) {
         this();
         this.game = parent.game;
@@ -38,7 +47,7 @@ public class Node {
     }
 
     public void addChild(Node child) {
-        this.children.add(child);
+        this.childs.add(child);
     }
 
     public void addFirstHeroWin() {
@@ -46,9 +55,13 @@ public class Node {
         totalGames++;
     }
 
-    public void addSecondHeroWin() {
+    public void addSecondHeroWins() {
         secondHeroWins++;
         totalGames++;
+    }
+
+    public List<Move> getAvailableMMoves() {
+        return this.game.getActiveHero().getAvailableMoves();
     }
 
     public Game getGame() {
@@ -68,11 +81,11 @@ public class Node {
     }
 
     public List<Node> getChilds() {
-        return children;
+        return childs;
     }
 
-    public void setChilds(List<Node> children) {
-        this.children = children;
+    public void setChilds(List<Node> childs) {
+        this.childs = childs;
     }
 
     public Move getMoveInNode() {

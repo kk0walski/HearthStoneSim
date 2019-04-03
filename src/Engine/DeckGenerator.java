@@ -1,6 +1,8 @@
-package game;
+package Engine;
 
-import gameconfig.GameConfig;
+import Cards.Minion;
+import Cards.Card;
+import Heroes.Hero;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,13 +12,14 @@ public class DeckGenerator {
 
     private static final Random RANDOM = new Random();
 
-    public static List<Card> getDeck(int numberOfCards) {
+    public static List<Card> getDeck(int numberOfCards, Hero owner) {
         List<Card> deck = new ArrayList<>();
         while (deck.size() < numberOfCards) {
-            deck.add(new Card(
+            deck.add(new Minion(
                     RANDOM.nextInt(GameConfig.CARD_MAX_HEALTH) + 1,
                     RANDOM.nextInt(GameConfig.CARD_MAX_MANA) + 1,
-                    RANDOM.nextInt(GameConfig.CARD_MAX_ATTACK) + 1
+                    RANDOM.nextInt(GameConfig.CARD_MAX_ATTACK) + 1,
+                    owner
             ));
         }
         return deck;
