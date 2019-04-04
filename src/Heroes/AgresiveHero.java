@@ -7,18 +7,18 @@ import Moves.*;
 
 import java.util.List;
 
-public class AggresiveHero extends AbstractHero implements HeuristicHero {
+public class AgresiveHero extends AbstractHero implements HeuristicHero {
 
     private static int cardsMul = 10;
     private static int attackHeroMul = 100;
     private static int attackMinionMul = 10;
     private static int endRoundMul = 1;
 
-    public AggresiveHero(Game game, String name, List<Card> initialDeck, boolean isOponent, int initialHandSize) {
+    public AgresiveHero(Game game, String name, List<Card> initialDeck, boolean isOponent, int initialHandSize) {
         super(game, name, initialDeck, isOponent, initialHandSize);
     }
 
-    public AggresiveHero() {
+    public AgresiveHero() {
         super(null, null, null, false, -1);
     }
 

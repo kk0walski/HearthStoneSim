@@ -232,7 +232,7 @@ public abstract class AbstractHero implements Hero {
         availableMoves = possibleMoves();
     }
 
-    private List<Move> possibleMoves() {
+    public List<Move> possibleMoves() {
         List<Move> possibleMoves = new ArrayList<>();
 
         for (int cardInHandIndex = 0; cardInHandIndex < this.hand.size(); cardInHandIndex++) {
@@ -435,7 +435,7 @@ public abstract class AbstractHero implements Hero {
 
     private AbstractHero copyHeroInstance() {
         AbstractHero res = null;
-        /*if (this instanceof DefaultHero)
+        if (this instanceof DefaultHero)
             res = new DefaultHero();
         if (this instanceof AgresiveHero)
             res = new AgresiveHero();
@@ -443,7 +443,7 @@ public abstract class AbstractHero implements Hero {
             res = new PassiveHero();
         if (this instanceof RandomHero)
             res = new RandomHero();
-        if (this instanceof MctsHero)
+        /*if (this instanceof MctsHero)
             res = new MctsHero();*/
         return res;
     }
