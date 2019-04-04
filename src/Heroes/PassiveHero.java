@@ -32,6 +32,7 @@ public class PassiveHero extends AbstractHero implements HeuristicHero {
                 }
             }
             toDo = availableMoves.get(bestFound);
+            printMoveInfo(toDo);
             performMove(toDo);
         }
     }

@@ -36,6 +36,7 @@ public class AgresiveHero extends AbstractHero implements HeuristicHero {
                 }
             }
             toDo = availableMoves.get(bestFound);
+            printMoveInfo(toDo);
             performMove(toDo);
         }
     }

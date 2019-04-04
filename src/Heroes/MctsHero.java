@@ -73,16 +73,4 @@ public class MctsHero extends AbstractHero implements HeuristicHero {
     public List<Integer> getMaximumTreeDepths() {
         return maximumTreeDepths;
     }
-
-    private void printMoveInfo(Move move) {
-        if (move instanceof PutCard) {
-            System.out.println("[Ruch MCTS] PutCard " + ((Minion) move.getCard()).getAttack());
-        } else if (move instanceof AttackHero) {
-            System.out.println("[Ruch MCTS] AttackHero - cel " + ((AttackHero) move).getHeroToGetAttacked().getName());
-        } else if (move instanceof AttackMinion) {
-            System.out.println("[Ruch MCTS] AttackMinion - cel " + ((AttackMinion) move).getMinionToGetAttacked().getHealth());
-        } else {
-            System.out.println("[Ruch MCTS] EndRound");
-        }
-    }
 }

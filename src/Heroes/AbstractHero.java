@@ -277,7 +277,7 @@ public abstract class AbstractHero implements Hero {
 
     public void revertDamage(int damage) {
         this.health += damage;
-        if (health > MAXIMUM_HEALTH_POINTS) {
+        if (this.health > MAXIMUM_HEALTH_POINTS) {
             this.health = MAXIMUM_HEALTH_POINTS;
         }
     }
@@ -497,6 +497,18 @@ public abstract class AbstractHero implements Hero {
             }
             toDo = availableMoves.get(bestFound);
             performMove(toDo);
+        }
+    }
+
+    protected void printMoveInfo(Move move) {
+        if (move instanceof PutCard) {
+            System.out.println("[Ruch " + this.name + "] PutCard " + ((Minion) move.getCard()).getAttack());
+        } else if (move instanceof AttackHero) {
+            System.out.println("[Ruch " + this.name + "] AttackHero - cel " + ((AttackHero) move).getHeroToGetAttacked().getName());
+        } else if (move instanceof AttackMinion) {
+            System.out.println("[Ruch " + this.name + "] AttackMinion - cel " + ((AttackMinion) move).getMinionToGetAttacked().getHealth());
+        } else {
+            System.out.println("[Ruch " + this.name + "] EndRound");
         }
     }
 
