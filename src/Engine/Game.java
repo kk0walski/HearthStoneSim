@@ -63,6 +63,12 @@ public class Game {
         setGameOver(false);
     }
 
+    public void initializeAndStartPassiveWithAggressiveGame() {
+        initializePassiveAndAgressive();
+        setActiveHero(firstHero);
+        setGameOver(false);
+    }
+
     public void initializeAndStartInitializeRandomHeroAndPassiveGame() {
         initializeRandomHeroAndPassive();
         setActiveHero(firstHero);
@@ -87,6 +93,13 @@ public class Game {
         initializeStandardHeroAndAgresive();
         setActiveHero(firstHero);
         setGameOver(false);
+    }
+
+    private void initializePassiveAndAgressive() {
+        firstHero = new PassiveHero(this, "Passive Hero", generateStandardDeck(), false, 3);
+        assignCardsToHero(firstHero);
+        secondHero = new AgresiveHero(this, "Agresive Hero", generateStandardDeck(), true, 4);
+        assignCardsToHero(secondHero);
     }
 
 
