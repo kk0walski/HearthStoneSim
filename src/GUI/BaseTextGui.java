@@ -54,25 +54,34 @@ public class BaseTextGui {
 
     public void startGame() {
         System.out.println("Gra rozpoczeta");
-        game.initializeAndStartRandomWithMctsGame(50, 100);
+        game.initializeAndStartRandomWithAggressive();
         System.out.println();
         game.getActiveHero().startRound();
         baseInfo();
     }
 
-    public void play() {
-        startGame();
-        while ((game.getWinner() == null)) {
-            makeMove();
-            if (game.getWinner() != null)
-                break;
-            baseInfo();
-        }
+    public void play(int iterations) {
+        int winPlayer1 = 0;
+        int winPlayer2 = 0;
+        for (int i = 0; i < iterations; i++) {
+            startGame();
+            while ((game.getWinner() == null)) {
+                makeMove();
+                if (game.getWinner() != null)
+                    break;
+                baseInfo();
+            }
 
-        if (game.getWinner() == game.getFirstHero()) //celowe por�wnanie referencji
-            System.out.println("Brawo gracz 1 wygrywa");
-        else
-            System.out.println("Brawo gracz 2 wygrywa");
+            if (game.getWinner() == game.getFirstHero()) { //celowe por�wnanie referencji
+                System.out.println("Brawo gracz 1 wygrywa");
+                winPlayer1++;
+            } else {
+                System.out.println("Brawo gracz 2 wygrywa");
+                winPlayer2++;
+            }
+        }
+        System.out.println("Gracz " + game.getFirstHero().getName() + " wygrał: " + winPlayer1 + " razy.");
+        System.out.println("Gracz " + game.getSecondHero().getName() + " wygrał: " + winPlayer2 + " razy.");
     }
 
     public void makeMove() {
@@ -164,6 +173,6 @@ public class BaseTextGui {
 
     public static void main(String[] args) {
         BaseTextGui g = new BaseTextGui(new Game());
-        g.play();
+        g.play(100);
     }
 }

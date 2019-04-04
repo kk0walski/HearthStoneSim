@@ -69,10 +69,16 @@ public class Game {
         setGameOver(false);
     }
 
+    public void initializeAndStartRandomWithAggressive() {
+        initializeRandomHeroAndAgressive();
+        setActiveHero(firstHero);
+        setGameOver(false);
+    }
+
     private void initializeStandardHeroAndRandom() {
         firstHero = new DefaultHero(this, "First Hero", generateStandardDeck(), false, 3);
         assignCardsToHero(firstHero);
-        secondHero = new RandomHero(this, "Second Hero", generateStandardDeck(), true, 4);
+        secondHero = new RandomHero(this, "Random Hero", generateStandardDeck(), true, 4);
         assignCardsToHero(secondHero);
     }
 
@@ -87,14 +93,14 @@ public class Game {
     private void initializeStandardHeroAndAgresive() {
         firstHero = new DefaultHero(this, "First Hero", generateStandardDeck(), false, 3);
         assignCardsToHero(firstHero);
-        secondHero = new AgresiveHero(this, "Second Hero", generateStandardDeck(), true, 4);
+        secondHero = new AgresiveHero(this, "Agresive Hero", generateStandardDeck(), true, 4);
         assignCardsToHero(secondHero);
     }
 
     private void initializeStandardHeroAndPassive() {
         firstHero = new DefaultHero(this, "First Hero", generateStandardDeck(), false, 3);
         assignCardsToHero(firstHero);
-        secondHero = new PassiveHero(this, "Second Hero", generateStandardDeck(), true, 4);
+        secondHero = new PassiveHero(this, "Passive Hero", generateStandardDeck(), true, 4);
         assignCardsToHero(secondHero);
     }
 
@@ -106,9 +112,16 @@ public class Game {
     }
 
     private void initializeRandomHeroAndPassive() {
-        firstHero = new RandomHero(this, "First Hero", generateStandardDeck(), false, 3);
+        firstHero = new RandomHero(this, "Random Hero", generateStandardDeck(), false, 3);
         assignCardsToHero(firstHero);
-        secondHero = new PassiveHero(this, "Second Hero", generateStandardDeck(), true, 4);
+        secondHero = new PassiveHero(this, "Passive Hero", generateStandardDeck(), true, 4);
+        assignCardsToHero(secondHero);
+    }
+
+    private void initializeRandomHeroAndAgressive() {
+        firstHero = new RandomHero(this, "Random Hero", generateStandardDeck(), false, 3);
+        assignCardsToHero(firstHero);
+        secondHero = new AgresiveHero(this, "Agresive Hero", generateStandardDeck(), true, 4);
         assignCardsToHero(secondHero);
     }
 
