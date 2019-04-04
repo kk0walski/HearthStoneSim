@@ -28,24 +28,33 @@ public class BaseTextGui {
     }
 
     public void baseInfo() {
-        System.out.println("Zycie przeciwnika "
-                + game.getEnemyOf(game.getActiveHero()).getHealth()
-                + " mana przeciwnika " + game.getEnemyOf(game.getActiveHero()).getMana());
-        System.out.println("Karty w rece przeciwnika");
-        printCards(game.getEnemyOf(game.getActiveHero()).getHand());
-        System.out.println("Karty na stole przeciwnika");
-        printCards(game.getEnemyOf(game.getActiveHero()).getBoard());
-        System.out.println();
-        System.out.println("Twoje zycie " + game.getActiveHero().getHealth() + " twoja mana  " + game.getActiveHero().getMana());
-        System.out.println("Karty w rece");
-        printCards(game.getActiveHero().getHand());
-        System.out.println("Karty na stole");
-        printCards(game.getActiveHero().getBoard());
+        System.out.println("\nAktywny gracz: " + game.getActiveHero().getName() + "\n");
+        System.out.println("Pierwszy gracz: " + game.getFirstHero().getName());
+        System.out.println("HP: " + game.getFirstHero().getHealth());
+        System.out.println("Mana: " + game.getFirstHero().getMana());
+        System.out.println("Liczba kart w decku: " + game.getFirstHero().getDeck().size());
+        System.out.println("Kara za pusty deck: " + game.getFirstHero().getPunishForEmptyDeck());
+        System.out.println("Karty w ręce: ");
+        printCards(game.getFirstHero().getHand());
+        System.out.println("Karty na stole: ");
+        printCards(game.getFirstHero().getBoard());
+        System.out.println("------------------------------");
+
+        System.out.println("Drugi gracz: " + game.getSecondHero().getName());
+        System.out.println("HP: " + game.getSecondHero().getHealth());
+        System.out.println("Mana: " + game.getSecondHero().getMana());
+        System.out.println("Liczba kart w decku: " + game.getSecondHero().getDeck().size());
+        System.out.println("Kara za pusty deck: " + game.getSecondHero().getPunishForEmptyDeck());
+        System.out.println("Karty w ręce: ");
+        printCards(game.getSecondHero().getHand());
+        System.out.println("Karty na stole: ");
+        printCards(game.getSecondHero().getBoard());
+        System.out.println("------------------------------");
     }
 
     public void startGame() {
         System.out.println("Gra rozpoczeta");
-        game.initializeAndStartInitializeRandomHeroAndPassiveGame();
+        game.initializeAndStartRandomWithMctsGame(50, 100);
         System.out.println();
         game.getActiveHero().startRound();
         baseInfo();

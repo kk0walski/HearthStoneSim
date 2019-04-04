@@ -98,7 +98,7 @@ public class Minion implements Card {
     }
 
     public void receiveDamage(int damage) {
-        health -= damage;
+        this.health -= damage;
         notifyHeroIfDeadMinion();
     }
 

@@ -272,13 +272,13 @@ public abstract class AbstractHero implements Hero {
     }
 
     public void receiveDamage(int damage) {
-        health = health - damage;
+        this.health -= damage;
     }
 
     public void revertDamage(int damage) {
-        health = health + damage;
+        this.health += damage;
         if (health > MAXIMUM_HEALTH_POINTS) {
-            health = MAXIMUM_HEALTH_POINTS;
+            this.health = MAXIMUM_HEALTH_POINTS;
         }
     }
 
@@ -443,8 +443,8 @@ public abstract class AbstractHero implements Hero {
             res = new PassiveHero();
         if (this instanceof RandomHero)
             res = new RandomHero();
-        /*if (this instanceof MctsHero)
-            res = new MctsHero();*/
+        if (this instanceof MctsHero)
+            res = new MctsHero();
         return res;
     }
 
