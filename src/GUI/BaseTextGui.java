@@ -3,6 +3,7 @@ package GUI;
 import Cards.Card;
 import Cards.Minion;
 import Engine.Game;
+import Heroes.HeuristicHero;
 import Moves.*;
 
 import java.util.List;
@@ -44,7 +45,7 @@ public class BaseTextGui {
 
     public void startGame() {
         System.out.println("Gra rozpoczeta");
-        game.initializeAndStartStandardGame();
+        game.initializeAndStartInitializeRandomHeroAndPassiveGame();
         System.out.println();
         game.getActiveHero().startRound();
         baseInfo();
@@ -66,6 +67,10 @@ public class BaseTextGui {
     }
 
     public void makeMove() {
+        if (game.getActiveHero() instanceof HeuristicHero) {
+            ((HeuristicHero) game.getActiveHero()).chooseHeuristicMove();
+            return;
+        }
         System.out.println("1.Poloz karte 2.Uzyj karty ze stolu 3.Skoncz ture ");
         int move = keyboard.nextInt();
         Move m = prepareMove(move);
