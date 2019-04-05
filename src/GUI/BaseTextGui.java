@@ -54,7 +54,7 @@ public class BaseTextGui {
 
     public void startGame() {
         System.out.println("Gra rozpoczeta");
-        game.initializeAndStartPassiveWithAggressiveGame();
+        game.initializeAndStartAggresiveWithMctsGame(50, 100);
         System.out.println();
         game.getActiveHero().startRound();
         baseInfo();
@@ -173,6 +173,6 @@ public class BaseTextGui {
 
     public static void main(String[] args) {
         BaseTextGui g = new BaseTextGui(new Game());
-        g.play(100);
+        g.play(10);
     }
 }

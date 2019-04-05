@@ -22,12 +22,11 @@ public class CardsHelper {
      */
     public static List<Card> generateStandardDeck() {
         if (registeredStandardDeck == null) {
-            registerStandardDeck(GameConfig.CARDS_IN_DECK);
+            registerStandardDeck(GameConfig.CARDS_IN_DECK / 2);
         }
 
         List<Card> standardDeckCopyWithDoubledCards = deepDeckCopy(registeredStandardDeck);
         standardDeckCopyWithDoubledCards.addAll(deepDeckCopy(registeredStandardDeck));
-
         return standardDeckCopyWithDoubledCards;
     }
 
@@ -43,7 +42,7 @@ public class CardsHelper {
         return cards;
     }
 
-    private static List<Card> deepDeckCopy(List<Card> deckToCopy) {
+    public static List<Card> deepDeckCopy(List<Card> deckToCopy) {
         List<Card> deckCopy = new ArrayList<>();
 
         deckToCopy.forEach(cardToCopy -> deckCopy.add(cardToCopy.deepCopy()));

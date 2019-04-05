@@ -71,6 +71,9 @@ public class AgresiveHero extends AbstractHero implements HeuristicHero {
         for (int i = 0; i < availableMoves.size(); i++) {
             if (availableMoves.get(i) instanceof AttackHero || availableMoves.get(i) instanceof AttackMinion)
                 return true;
+            if (availableMoves.get(i) instanceof PutCard) {
+                return true;
+            }
         }
         return false;
     }

@@ -19,72 +19,84 @@ public class Game {
         initializeStandardHeroes();
         setActiveHero(firstHero);
         setGameOver(false);
+        setWinner(null);
     }
 
     public void initializeAndStartCustomGame(List<Card> firstHeroDeck, int firstHeroInitialHandSize, List<Card> secondHeroDeck, int secondHeroInitialHandSize) {
         initializeCustomHeroes(firstHeroDeck, firstHeroInitialHandSize, secondHeroDeck, secondHeroInitialHandSize);
         setActiveHero(firstHero);
         setGameOver(false);
+        setWinner(null);
     }
 
     public void initializeAndStartHumanWithRandomGame() {
         initializeStandardHeroAndRandom();
         setActiveHero(firstHero);
         setGameOver(false);
+        setWinner(null);
     }
 
     public void initializeAndStartHumanWithPassiveGame() {
         initializeStandardHeroAndPassive();
         setActiveHero(firstHero);
         setGameOver(false);
+        setWinner(null);
     }
 
     public void initializeAndStartHumanWithMctsGame() {
         initializeStandardHeroAndMcts();
         setActiveHero(firstHero);
         setGameOver(false);
+        setWinner(null);
     }
 
     public void initializeAndStartRandomWithMctsGame(int timeForMctsMove, int totalTimeForMctsMoves) {
         initializeRandomHeroAndMcts(timeForMctsMove, totalTimeForMctsMoves);
         setActiveHero(firstHero);
         setGameOver(false);
+        setWinner(null);
     }
 
     public void initializeAndStartAggresiveWithMctsGame(int timeForMctsMove, int totalTimeForMctsMoves) {
         initializeAggresiveHeroAndMcts(timeForMctsMove, totalTimeForMctsMoves);
         setActiveHero(firstHero);
         setGameOver(false);
+        setWinner(null);
     }
 
     public void initializeAndStartPassiveWithMctsGame(int timeForMctsMove, int totalTimeForMctsMoves) {
         initializePassiveAndMcts(timeForMctsMove, totalTimeForMctsMoves);
         setActiveHero(firstHero);
         setGameOver(false);
+        setWinner(null);
     }
 
     public void initializeAndStartPassiveWithAggressiveGame() {
         initializePassiveAndAgressive();
         setActiveHero(firstHero);
         setGameOver(false);
+        setWinner(null);
     }
 
     public void initializeAndStartInitializeRandomHeroAndPassiveGame() {
         initializeRandomHeroAndPassive();
         setActiveHero(firstHero);
         setGameOver(false);
+        setWinner(null);
     }
 
     public void initializeAndStartRandomWithAggressive() {
         initializeRandomHeroAndAgressive();
         setActiveHero(firstHero);
         setGameOver(false);
+        setWinner(null);
     }
 
     private void initializeStandardHeroAndRandom() {
-        firstHero = new DefaultHero(this, "First Hero", generateStandardDeck(), false, 3);
+        List<Card> deck = generateStandardDeck();
+        firstHero = new DefaultHero(this, "First Hero", CardsHelper.deepDeckCopy(deck), false, 3);
         assignCardsToHero(firstHero);
-        secondHero = new RandomHero(this, "Random Hero", generateStandardDeck(), true, 4);
+        secondHero = new RandomHero(this, "Random Hero", CardsHelper.deepDeckCopy(deck), true, 4);
         assignCardsToHero(secondHero);
     }
 
@@ -93,69 +105,79 @@ public class Game {
         initializeStandardHeroAndAgresive();
         setActiveHero(firstHero);
         setGameOver(false);
+        setWinner(null);
     }
 
     private void initializePassiveAndAgressive() {
-        firstHero = new PassiveHero(this, "Passive Hero", generateStandardDeck(), false, 3);
+        List<Card> deck = generateStandardDeck();
+        firstHero = new PassiveHero(this, "Passive Hero", CardsHelper.deepDeckCopy(deck), false, 3);
         assignCardsToHero(firstHero);
-        secondHero = new AgresiveHero(this, "Agresive Hero", generateStandardDeck(), true, 4);
+        secondHero = new AgresiveHero(this, "Agresive Hero", CardsHelper.deepDeckCopy(deck), true, 4);
         assignCardsToHero(secondHero);
     }
 
 
     private void initializeStandardHeroAndAgresive() {
-        firstHero = new DefaultHero(this, "First Hero", generateStandardDeck(), false, 3);
+        List<Card> deck = generateStandardDeck();
+        firstHero = new DefaultHero(this, "First Hero", CardsHelper.deepDeckCopy(deck), false, 3);
         assignCardsToHero(firstHero);
-        secondHero = new AgresiveHero(this, "Agresive Hero", generateStandardDeck(), true, 4);
+        secondHero = new AgresiveHero(this, "Agresive Hero", CardsHelper.deepDeckCopy(deck), true, 4);
         assignCardsToHero(secondHero);
     }
 
     private void initializeStandardHeroAndPassive() {
-        firstHero = new DefaultHero(this, "First Hero", generateStandardDeck(), false, 3);
+        List<Card> deck = generateStandardDeck();
+        firstHero = new DefaultHero(this, "First Hero", CardsHelper.deepDeckCopy(deck), false, 3);
         assignCardsToHero(firstHero);
-        secondHero = new PassiveHero(this, "Passive Hero", generateStandardDeck(), true, 4);
+        secondHero = new PassiveHero(this, "Passive Hero", CardsHelper.deepDeckCopy(deck), true, 4);
         assignCardsToHero(secondHero);
     }
 
     private void initializeStandardHeroAndMcts() {
-        firstHero = new DefaultHero(this, "First Hero", generateStandardDeck(), false, 3);
+        List<Card> deck = generateStandardDeck();
+        firstHero = new DefaultHero(this, "First Hero", CardsHelper.deepDeckCopy(deck), false, 3);
         assignCardsToHero(firstHero);
-        secondHero = new MctsHero(this, "Mcts Hero", generateStandardDeck(), true, 4);
+        secondHero = new MctsHero(this, "Mcts Hero", CardsHelper.deepDeckCopy(deck), true, 4);
         assignCardsToHero(secondHero);
     }
 
     private void initializeRandomHeroAndPassive() {
-        firstHero = new RandomHero(this, "Random Hero", generateStandardDeck(), false, 3);
+        List<Card> deck = generateStandardDeck();
+        firstHero = new RandomHero(this, "Random Hero", CardsHelper.deepDeckCopy(deck), false, 3);
         assignCardsToHero(firstHero);
-        secondHero = new PassiveHero(this, "Passive Hero", generateStandardDeck(), true, 4);
+        secondHero = new PassiveHero(this, "Passive Hero", CardsHelper.deepDeckCopy(deck), true, 4);
         assignCardsToHero(secondHero);
     }
 
     private void initializeRandomHeroAndAgressive() {
-        firstHero = new RandomHero(this, "Random Hero", generateStandardDeck(), false, 3);
+        List<Card> deck = generateStandardDeck();
+        firstHero = new RandomHero(this, "Random Hero", CardsHelper.deepDeckCopy(deck), false, 3);
         assignCardsToHero(firstHero);
-        secondHero = new AgresiveHero(this, "Agresive Hero", generateStandardDeck(), true, 4);
+        secondHero = new AgresiveHero(this, "Agresive Hero", CardsHelper.deepDeckCopy(deck), true, 4);
         assignCardsToHero(secondHero);
     }
 
     private void initializeRandomHeroAndMcts(int timeForMctsMove, int totalTimeForMctsMoves) {
-        firstHero = new MctsHero(this, "Mcts Hero", generateStandardDeck(), false, 3, timeForMctsMove, totalTimeForMctsMoves);
+        List<Card> deck = generateStandardDeck();
+        firstHero = new MctsHero(this, "Mcts Hero", CardsHelper.deepDeckCopy(deck), false, 3, timeForMctsMove, totalTimeForMctsMoves);
         assignCardsToHero(firstHero);
-        secondHero = new RandomHero(this, "Random Hero", generateStandardDeck(), true, 4);
+        secondHero = new RandomHero(this, "Random Hero", CardsHelper.deepDeckCopy(deck), true, 4);
         assignCardsToHero(secondHero);
     }
 
     private void initializeAggresiveHeroAndMcts(int timeForMctsMove, int totalTimeForMctsMoves) {
-        firstHero = new MctsHero(this, "Mcts Hero", generateStandardDeck(), false, 3, timeForMctsMove, totalTimeForMctsMoves);
+        List<Card> deck = generateStandardDeck();
+        firstHero = new MctsHero(this, "Mcts Hero", CardsHelper.deepDeckCopy(deck), false, 3, timeForMctsMove, totalTimeForMctsMoves);
         assignCardsToHero(firstHero);
-        secondHero = new AgresiveHero(this, "Aggresive Hero", generateStandardDeck(), true, 4);
+        secondHero = new AgresiveHero(this, "Aggresive Hero", CardsHelper.deepDeckCopy(deck), true, 4);
         assignCardsToHero(secondHero);
     }
 
     private void initializePassiveAndMcts(int timeForMctsMove, int totalTimeForMctsMoves) {
-        firstHero = new MctsHero(this, "Mcts Hero", generateStandardDeck(), false, 3, timeForMctsMove, totalTimeForMctsMoves);
+        List<Card> deck = generateStandardDeck();
+        firstHero = new MctsHero(this, "Mcts Hero", CardsHelper.deepDeckCopy(deck), false, 3, timeForMctsMove, totalTimeForMctsMoves);
         assignCardsToHero(firstHero);
-        secondHero = new PassiveHero(this, "Passive Hero", generateStandardDeck(), true, 4);
+        secondHero = new PassiveHero(this, "Passive Hero", CardsHelper.deepDeckCopy(deck), true, 4);
         assignCardsToHero(secondHero);
     }
 
@@ -241,9 +263,10 @@ public class Game {
     }
 
     private void initializeStandardHeroes() {
-        firstHero = new DefaultHero(this, "First Hero", generateStandardDeck(), false, 4);
+        List<Card> deck = generateStandardDeck();
+        firstHero = new DefaultHero(this, "First Hero", CardsHelper.deepDeckCopy(deck), false, 4);
         assignCardsToHero(firstHero);
-        secondHero = new DefaultHero(this, "SecondHero", generateStandardDeck(), true, 4);
+        secondHero = new DefaultHero(this, "SecondHero", CardsHelper.deepDeckCopy(deck), true, 4);
         assignCardsToHero(secondHero);
     }
 
