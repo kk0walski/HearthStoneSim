@@ -4,6 +4,7 @@ import Cards.Card;
 import Cards.Minion;
 import Engine.Game;
 import Heroes.HeuristicHero;
+import Heroes.MctsHero;
 import Moves.*;
 
 import java.util.List;
@@ -54,7 +55,7 @@ public class BaseTextGui {
 
     public void startGame() {
         System.out.println("Gra rozpoczeta");
-        game.initializeAndStartAggresiveWithMctsGame(50, 25);
+        game.initializeAndStartAggresiveWithMctsGame(100, 100);
         System.out.println();
         game.getActiveHero().startRound();
         baseInfo();
@@ -71,7 +72,8 @@ public class BaseTextGui {
                     break;
                 baseInfo();
             }
-
+            //System.out.println("Playouts: " + ((MctsHero)game.getFirstHero()).getNumbersOfPlayouts());
+            //System.out.println("Tree depths: " + ((MctsHero)game.getFirstHero()).getMaximumTreeDepths());
             if (game.getWinner() == game.getFirstHero()) { //celowe por�wnanie referencji
                 System.out.println("Brawo gracz 1 wygrywa");
                 winPlayer1++;

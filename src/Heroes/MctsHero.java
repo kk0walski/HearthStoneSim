@@ -14,6 +14,7 @@ public class MctsHero extends AbstractHero implements HeuristicHero {
 
     private List<Integer> numbersOfPlayouts = new ArrayList<>();
     private List<Integer> maximumTreeDepths = new ArrayList<>();
+    private List<Move> moves = new ArrayList<>();
     private int timeForMctsMove;
     private int totalTimeForMctsMoves;
 
@@ -45,6 +46,7 @@ public class MctsHero extends AbstractHero implements HeuristicHero {
             }
             MctsAlgorithm mctsAlgorithm = new MctsAlgorithm(new Node(game), timeForMctsMove, this);
             bestMove = mctsAlgorithm.run();
+            this.moves.add(bestMove);
             numbersOfPlayouts.add(mctsAlgorithm.getNumberOfPlayouts());
             maximumTreeDepths.add(mctsAlgorithm.getMaximumTreeDepth());
             printMoveInfo(bestMove);
