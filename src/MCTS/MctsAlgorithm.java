@@ -3,20 +3,22 @@ package MCTS;
 import Cards.Card;
 import Engine.Game;
 import Heroes.AbstractHero;
+import Heroes.Hero;
 import Moves.Move;
-
 import java.util.ArrayDeque;
 import java.util.List;
 
 public class MctsAlgorithm {
 
-    private static final int CP_FACTOR = 1;
+    private static final int CP_FACTOR = 2;
     private Node root;
     private int timeForMctsMove;
+    private Hero me;
 
-    public MctsAlgorithm(Node root, int timeForMctsMove) {
+    public MctsAlgorithm(Node root, int timeForMctsMove, Hero hero) {
         this.root = root;
         this.timeForMctsMove = timeForMctsMove;
+        this.me = hero;
     }
 
     public Move run() {
@@ -78,7 +80,11 @@ public class MctsAlgorithm {
         }
 
         if (child.getTotalGames() == 0) {
-            return Integer.MAX_VALUE;
+            if (me.getName() == child.getGame().getActiveHero().getName()) {
+                return child.getGame().getActiveHero().getHealth() - child.getGame().getEnemyOf(child.getGame().getActiveHero()).getHealth();
+            } else {
+                return child.getGame().getEnemyOf(child.getGame().getActiveHero()).getHealth() - child.getGame().getActiveHero().getHealth();
+            }
         }
 
         return q / child.getTotalGames() + cFactor * Math.sqrt(

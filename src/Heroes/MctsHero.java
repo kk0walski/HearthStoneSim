@@ -43,7 +43,7 @@ public class MctsHero extends AbstractHero implements HeuristicHero {
             if (game.isGameOver() || bestMove instanceof EndRound) {
                 return;
             }
-            MctsAlgorithm mctsAlgorithm = new MctsAlgorithm(new Node(game), timeForMctsMove);
+            MctsAlgorithm mctsAlgorithm = new MctsAlgorithm(new Node(game), timeForMctsMove, this);
             bestMove = mctsAlgorithm.run();
             numbersOfPlayouts.add(mctsAlgorithm.getNumberOfPlayouts());
             maximumTreeDepths.add(mctsAlgorithm.getMaximumTreeDepth());

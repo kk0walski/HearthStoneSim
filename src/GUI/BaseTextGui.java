@@ -54,7 +54,7 @@ public class BaseTextGui {
 
     public void startGame() {
         System.out.println("Gra rozpoczeta");
-        game.initializeAndStartAggresiveWithMctsGame(50, 100);
+        game.initializeAndStartAggresiveWithMctsGame(50, 25);
         System.out.println();
         game.getActiveHero().startRound();
         baseInfo();
