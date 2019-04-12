@@ -15,12 +15,13 @@ public abstract class AbstractHero implements Hero {
 
     public static final int STARTING_HAND_SIZE = 4;
     public static final int MAXIMUM_HAND_SIZE = 7;
-    public static final int MAXIMUM_HEALTH_POINTS = 20;
+    public static final int MAXIMUM_HEALTH_POINTS = 10;
     public static final int MAXIMUM_MANA_POINTS = 10; // todo defaultowo powinno byc 10
     public static final int INITIAL_HEALTH_POINTS = 20;
-    public static final int INITIAL_MANA_POINTS = 20;
+    public static final int INITIAL_MANA_POINTS = 10;
     public static final int INITIAL_PUNISH_FOR_EMPTY_DECK = 1;
-    public static final int INITIAL_ROUND_NUMBER = 0;
+    public static final int INITIAL_ROUND_NUMBER = 1;
+    public static final int ROUND_LIMIT = 10;
 
     protected String name;
     protected int health;
@@ -55,6 +56,7 @@ public abstract class AbstractHero implements Hero {
         availableMoves = new ArrayList<>();
         health = INITIAL_HEALTH_POINTS;
         mana = INITIAL_MANA_POINTS;
+        this.round = INITIAL_ROUND_NUMBER;
     }
 
     public AbstractHero(Game game, String name, List<Card> initialDeck, boolean isOponent) {
@@ -95,7 +97,9 @@ public abstract class AbstractHero implements Hero {
 
     public void startRound() {
         activateMinionsOnBoard();
-        increaseMana();
+        if (this.round <= ROUND_LIMIT) {
+            increaseManaToMax();
+        }
         pickCardFromDeck();
         notifyIfDeadHero();
         generateAvailableMoves();
@@ -183,6 +187,11 @@ public abstract class AbstractHero implements Hero {
         }
     }
 
+    public void increaseManaToMax() {
+        this.increasedMana = MAXIMUM_MANA_POINTS - mana;
+        this.mana = MAXIMUM_MANA_POINTS;
+    }
+
     private void activateMinionsOnBoard() {
         activatedMinions = new ArrayList<>();
         for (Card c : board) {
@@ -260,6 +269,7 @@ public abstract class AbstractHero implements Hero {
             return;
         }
         if (!(game.getActiveHero().equals(this))) {
+            this.round++;
         }
 
         notifyAboutRoundEnd();
@@ -318,7 +328,7 @@ public abstract class AbstractHero implements Hero {
     }
 
     public int getHealth() {
-        return health;
+        return this.health;
     }
 
     public void setHealth(int health) {
@@ -513,6 +523,6 @@ public abstract class AbstractHero implements Hero {
     }
 
     private int evaluate(Move toDo) {
-        return (int) (Math.random() * 100);
+        return (int) (Math.random() * 1000);
     }
 }

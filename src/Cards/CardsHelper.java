@@ -56,7 +56,7 @@ public class CardsHelper {
         for (int i = 0; i < size; i++) {
             int health = RANDOM.nextInt(GameConfig.CARD_MAX_HEALTH) + 1;
             int attack = RANDOM.nextInt(GameConfig.CARD_MAX_ATTACK) + 1;
-            int mana = (health / 2) + attack < GameConfig.CARD_MAX_MANA ? (health / 2) + attack : GameConfig.CARD_MAX_MANA;
+            int mana = Math.round((health / 2) + (attack / 2)) < GameConfig.CARD_MAX_MANA ? Math.round((health / 2) + (attack / 2)) : GameConfig.CARD_MAX_MANA;
 
             registerCard(registeredStandardDeck, new Minion(health, mana, attack));
         }

@@ -162,12 +162,12 @@ public class BaseTextGui {
         String allCards = new String();
         for (Card c : cards) {
             if (c instanceof Minion) {
-                String clazz = c.getClass().getSimpleName();
+                String klasa = c.getClass().getSimpleName();
                 int health = ((Minion) c).getHealth();
                 int cost = c.getCost();
                 int attack = ((Minion) c).getAttack();
                 boolean isActive = ((Minion) c).isActive();
-                allCards += clazz + " zycie " + health + " atak " + attack + " koszt " + cost + " aktywny " + isActive + " | ";
+                allCards += klasa + " zycie " + health + " atak " + attack + " koszt " + cost + " aktywny " + isActive + " | ";
             }
         }
         System.out.println(allCards);
@@ -175,6 +175,6 @@ public class BaseTextGui {
 
     public static void main(String[] args) {
         BaseTextGui g = new BaseTextGui(new Game());
-        g.play(10);
+        g.play(100);
     }
 }

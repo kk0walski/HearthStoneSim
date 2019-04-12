@@ -10,7 +10,7 @@ import java.util.List;
 public class AgresiveHero extends AbstractHero implements HeuristicHero {
 
     private static int cardsMul = 10;
-    private static int attackHeroMul = 100;
+    private static int attackHeroMul = 15;
     private static int attackMinionMul = 10;
     private static int endRoundMul = 1;
 
