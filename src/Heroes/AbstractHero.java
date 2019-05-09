@@ -13,34 +13,34 @@ import java.util.List;
 
 public abstract class AbstractHero implements Hero {
 
-    public static final int STARTING_HAND_SIZE = 4;
-    public static final int MAXIMUM_HAND_SIZE = 7;
-    public static final int MAXIMUM_HEALTH_POINTS = 10;
-    public static final int MAXIMUM_MANA_POINTS = 10; // todo defaultowo powinno byc 10
-    public static final int INITIAL_HEALTH_POINTS = 20;
-    public static final int INITIAL_MANA_POINTS = 10;
-    public static final int INITIAL_PUNISH_FOR_EMPTY_DECK = 1;
-    public static final int INITIAL_ROUND_NUMBER = 1;
-    public static final int ROUND_LIMIT = 10;
+    private static final int STARTING_HAND_SIZE = 4;
+    private static final int MAXIMUM_HAND_SIZE = 7;
+    private static final int MAXIMUM_HEALTH_POINTS = 20;
+    private static final int MAXIMUM_MANA_POINTS = 10;
+    private static final int INITIAL_HEALTH_POINTS = 20;
+    private static final int INITIAL_MANA_POINTS = 10;
+    private static final int INITIAL_PUNISH_FOR_EMPTY_DECK = 1;
+    private static final int INITIAL_ROUND_NUMBER = 1;
+    private static final int ROUND_LIMIT = 10;
 
     protected String name;
-    protected int health;
-    protected int mana;
+    private int health;
+    private int mana;
     protected int round;
-    protected int punishForEmptyDeck;
-    protected List<Card> deck;
+    private int punishForEmptyDeck;
+    private List<Card> deck;
     protected List<Card> hand;
-    protected List<Card> board;
+    private List<Card> board;
     protected Game game;
-    protected List<Move> availableMoves;
-    protected List<Card> activatedMinions;
+    private List<Move> availableMoves;
+    private List<Card> activatedMinions;
     private int increasedMana;
     private Card lastPickedCardBackup;
     private List<Move> movesInRoundBackup;
     private List<Move> availableMovesBackup;
-    private boolean isOponent = false;
+    private boolean isOponent;
 
-    public AbstractHero(Game game, String name, List<Card> initialDeck, boolean isOponent, int initialHandSize) {
+    AbstractHero(Game game, String name, List<Card> initialDeck, boolean isOponent, int initialHandSize) {
         this.game = game;
         this.name = name;
         round = INITIAL_ROUND_NUMBER;
@@ -98,7 +98,7 @@ public abstract class AbstractHero implements Hero {
     public void startRound() {
         activateMinionsOnBoard();
         if (this.round <= ROUND_LIMIT) {
-            increaseManaToMax();
+            increaseMana();
         }
         pickCardFromDeck();
         notifyIfDeadHero();
@@ -151,7 +151,7 @@ public abstract class AbstractHero implements Hero {
         }
     }
 
-    protected void revertDeadHeroNotification() {
+    private void revertDeadHeroNotification() {
         game.checkForGameEnd();
         if (game.isGameOver()) {
             game.setGameOver(false);
@@ -331,7 +331,7 @@ public abstract class AbstractHero implements Hero {
         return this.health;
     }
 
-    public void setHealth(int health) {
+    private void setHealth(int health) {
         this.health = health;
     }
 
@@ -339,7 +339,7 @@ public abstract class AbstractHero implements Hero {
         return mana;
     }
 
-    public void setMana(int mana) {
+    private void setMana(int mana) {
         this.mana = mana;
     }
 
@@ -355,7 +355,7 @@ public abstract class AbstractHero implements Hero {
         return punishForEmptyDeck;
     }
 
-    public void setPunishForEmptyDeck(int punishForEmptyDeck) {
+    private void setPunishForEmptyDeck(int punishForEmptyDeck) {
         this.punishForEmptyDeck = punishForEmptyDeck;
     }
 
@@ -363,7 +363,7 @@ public abstract class AbstractHero implements Hero {
         return deck;
     }
 
-    public void setDeck(List<Card> deck) {
+    private void setDeck(List<Card> deck) {
         this.deck = deck;
     }
 
@@ -379,7 +379,7 @@ public abstract class AbstractHero implements Hero {
         return board;
     }
 
-    public void setBoard(List<Card> board) {
+    private void setBoard(List<Card> board) {
         this.board = board;
     }
 
@@ -413,7 +413,7 @@ public abstract class AbstractHero implements Hero {
     public Hero deepCopy(Node root) {
         AbstractHero hero = copyHeroInstance();
 
-        hero.setName(new String(name));
+        hero.setName(name);
         hero.setHealth(getHealth());
         hero.setMana(getMana());
         hero.setRound(getRound());
@@ -510,7 +510,7 @@ public abstract class AbstractHero implements Hero {
         }
     }
 
-    protected void printMoveInfo(Move move) {
+    void printMoveInfo(Move move) {
         if (move instanceof PutCard) {
             System.out.println("[Ruch " + this.name + "] PutCard " + ((Minion) move.getCard()).getAttack());
         } else if (move instanceof AttackHero) {

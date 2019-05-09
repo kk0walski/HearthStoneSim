@@ -14,13 +14,14 @@ public class DeckGenerator {
 
     public static List<Card> getDeck(int numberOfCards, Hero owner) {
         List<Card> deck = new ArrayList<>();
-        while (deck.size() < numberOfCards) {
-            deck.add(new Minion(
+        while (deck.size() < numberOfCards / 2) {
+            Minion temp = new Minion(
                     RANDOM.nextInt(GameConfig.CARD_MAX_HEALTH) + 1,
                     RANDOM.nextInt(GameConfig.CARD_MAX_MANA) + 1,
                     RANDOM.nextInt(GameConfig.CARD_MAX_ATTACK) + 1,
-                    owner
-            ));
+                    owner);
+            deck.add(temp.deepCopy());
+            deck.add(temp.deepCopy());
         }
         return deck;
     }
