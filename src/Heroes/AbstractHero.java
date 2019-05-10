@@ -32,7 +32,7 @@ public abstract class AbstractHero implements Hero {
     protected List<Card> hand;
     private List<Card> board;
     protected Game game;
-    private List<Move> availableMoves;
+    public List<Move> availableMoves;
     private List<Card> activatedMinions;
     private int increasedMana;
     private Card lastPickedCardBackup;

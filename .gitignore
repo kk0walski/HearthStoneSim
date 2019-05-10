@@ -49,3 +49,8 @@ out/
 #idea folder
 .idea/
 .idea/*
+
+venv/*
+.vscode/*
+Dane/*
+.ipynb_checkpoints/*

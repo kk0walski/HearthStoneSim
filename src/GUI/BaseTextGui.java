@@ -790,23 +790,23 @@ public class BaseTextGui {
          Mcts vs Random
          */
 
-        //shortBunch(stringBuilder);
+        shortBunch(stringBuilder);
 
-        //longBunchRandom(stringBuilder);
+        longBunchRandom(stringBuilder);
 
         /*
          Mcts vs Aggresive
          */
 
-        //longBunchAggresive(stringBuilder);
+        longBunchAggresive(stringBuilder);
 
         /*
          Mcts vs Passive
          */
-        //longBunchPassive(stringBuilder);
+        longBunchPassive(stringBuilder);
 
-        Game game = new Game();
-        BaseTextGui gui = new BaseTextGui(game);
-        performTestMctsWithAggresive(20, 50, 30, stringBuilder);
+        //Game game = new Game();
+        //BaseTextGui gui = new BaseTextGui(game);
+        //performTestMctsWithAggresive(20, 50, 30, stringBuilder);
     }
 }
